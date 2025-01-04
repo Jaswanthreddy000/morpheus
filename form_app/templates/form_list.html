@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form List</title>
+</head>
+<body>
+    <h1>Forms</h1>
+    <ul>
+    {% for form in forms %}
+        <li><a href="{% url 'form_detail' form.id %}">{{ form.title }}</a></li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

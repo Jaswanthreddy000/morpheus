@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ form.title }}</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ form.title }}</h1>
+        <form method="post">
+            {% csrf_token %}
+            {% for question in form.questions.all %}
+                <div class="question">
+                    <label>{{ question.text }}</label>
+                    {% if question.question_type == 'text' %}
+                        <input type="text" name="question_{{ question.id }}" class="input-field" placeholder="Enter your answer here...">
+                    {% elif question.question_type == 'dropdown' %}
+                        <select name="question_{{ question.id }}" class="dropdown">
+                            <option value="" disabled selected>Select an option</option>
+                            {% for option in question.options.all %}
+                                <option value="{{ option.id }}">{{ option.text }}</option>
+                            {% endfor %}
+                        </select>
+                    {% elif question.question_type == 'checkbox' %}
+                        {% for option in question.options.all %}
+                            <div class="checkbox-group">
+                                <input type="checkbox" name="question_{{ question.id }}" value="{{ option.id }}" id="option_{{ option.id }}">
+                                <label for="option_{{ option.id }}">{{ option.text }}</label>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="submit-button">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
