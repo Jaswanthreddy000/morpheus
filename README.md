@@ -103,7 +103,7 @@ Visit http://127.0.0.1:8000/ to access the application.
    - Click on a analytics button of form to open the analytics page and see the analytics of the page.
 
 2) **Accessing Analytics Directly:**
-   - You can directly go to the analytics page for any form by navigating to [http://127.0.0.1:8000/forms/5/analytics/](http://127.0.0.1:8000/forms/5/analytics/) (replace "5" with the form ID).
+   - You can directly go to the analytics page for any form by navigating to [http://127.0.0.1:8000/forms/5/analytics/](http://127.0.0.1:8000/forms/{id}/analytics/) (replace "5" with the form ID).
 
        ![Alt Text](images/analytics.png)
 
