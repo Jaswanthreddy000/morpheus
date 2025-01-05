@@ -2,21 +2,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
-# Form Model
-# class Form(models.Model):
-#     title = models.CharField(max_length=255, unique=True)
-
-#     def __str__(self):
-#         return self.title
-
-#     def save(self, *args, **kwargs):
-#         # Perform validation before saving
-#         if self.questions.count() > 100:
-#             raise ValidationError("A form cannot have more than 100 questions.")
-#         super().save(*args, **kwargs)
-
-#     def get_ordered_questions(self):
-#         return self.questions.order_by('order')
 class Form(models.Model):
     title = models.CharField(max_length=255, unique=True)
 
