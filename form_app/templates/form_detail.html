@@ -3,37 +3,109 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ form.title }}</title>
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Include Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        // Function to validate the form before submission
+        function validateForm(event) {
+            let allFieldsFilled = true;
+            let errorMessage = "";
+
+            // Check all text input fields
+            document.querySelectorAll('input[type="text"]').forEach(input => {
+                if (input.value.trim() === "") {
+                    allFieldsFilled = false;
+                    errorMessage = "Please fill out all fields.";
+                }
+            });
+
+            // Check all dropdown fields
+            document.querySelectorAll('select').forEach(select => {
+                if (select.value === "") {
+                    allFieldsFilled = false;
+                    errorMessage = "Please select an option for all dropdown questions.";
+                }
+            });
+
+            // Check all checkbox fields (only one checkbox needs to be selected)
+            document.querySelectorAll('.checkbox-question').forEach(question => {
+                let checkboxes = question.querySelectorAll('input[type="checkbox"]');
+                let isChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+                if (!isChecked) {
+                    allFieldsFilled = false;
+                    errorMessage = "Please select at least one option for all checkbox questions.";
+                }
+            });
+
+            if (!allFieldsFilled) {
+                event.preventDefault();  // Prevent form submission
+                document.getElementById('error-message').innerText = errorMessage;
+            }
+        }
+    </script>
 </head>
-<body>
-    <div class="container">
-        <h1>{{ form.title }}</h1>
-        <form method="post">
+<body class="bg-gray-100">
+
+    <!-- Header Section -->
+    <header class="bg-purple-600 text-white">
+        <div class="max-w-7xl mx-auto flex items-center py-4 px-4 sm:px-6 lg:px-8">
+            <!-- Header Image -->
+            <img src="https://www.gstatic.com/images/branding/product/1x/forms_2020q4_48dp.png" alt="Google Forms Logo" class="h-12 w-12 mr-3">
+            <!-- Header Title -->
+            <h1 class="text-3xl font-semibold">New Response - {{ form.title }}</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto mt-10 bg-white shadow-md rounded-lg p-6">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">{{ form.title }}</h1>
+        <form method="post" class="space-y-6" onsubmit="validateForm(event)">
             {% csrf_token %}
             {% for question in form.questions.all %}
                 <div class="question">
-                    <label>{{ question.text }}</label>
+                    <label class="block text-lg font-medium text-gray-700 mb-2">{{ question.text }}</label>
                     {% if question.question_type == 'text' %}
-                        <input type="text" name="question_{{ question.id }}" class="input-field" placeholder="Enter your answer here...">
+                        <input 
+                            type="text" 
+                            name="question_{{ question.id }}" 
+                            class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                            placeholder="Enter your answer here...">
                     {% elif question.question_type == 'dropdown' %}
-                        <select name="question_{{ question.id }}" class="dropdown">
+                        <select 
+                            name="question_{{ question.id }}" 
+                            class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             <option value="" disabled selected>Select an option</option>
                             {% for option in question.options.all %}
                                 <option value="{{ option.id }}">{{ option.text }}</option>
                             {% endfor %}
                         </select>
                     {% elif question.question_type == 'checkbox' %}
-                        {% for option in question.options.all %}
-                            <div class="checkbox-group">
-                                <input type="checkbox" name="question_{{ question.id }}" value="{{ option.id }}" id="option_{{ option.id }}">
-                                <label for="option_{{ option.id }}">{{ option.text }}</label>
-                            </div>
-                        {% endfor %}
+                        <div class="space-y-2 checkbox-question">
+                            {% for option in question.options.all %}
+                                <div class="flex items-center space-x-3">
+                                    <input 
+                                        type="checkbox" 
+                                        name="question_{{ question.id }}" 
+                                        value="{{ option.id }}" 
+                                        id="option_{{ option.id }}" 
+                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="option_{{ option.id }}" class="text-gray-700">{{ option.text }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
             {% endfor %}
-            <button type="submit" class="submit-button">Submit</button>
+            <!-- Error message display -->
+            <div id="error-message" class="text-red-500 text-center mt-4"></div>
+            <button 
+                type="submit" 
+                class="w-full bg-blue-600 text-white p-3 rounded-md font-semibold hover:bg-blue-700 transition">
+                Submit
+            </button>
         </form>
     </div>
 </body>

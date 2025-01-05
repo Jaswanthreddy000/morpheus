@@ -71,20 +71,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'form_builder.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'form_builder_db',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'formproject',
+        'USER': 'suryaalavala',
+        'PASSWORD': 'jaswanth13',
+        'HOST': 'localhost',  # Or the IP address of your PostgreSQL server
+        'PORT': '5432',       # Default PostgreSQL port
     }
 }
+
 
 
 
